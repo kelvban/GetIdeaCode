@@ -23,8 +23,9 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             try {
-              const date = new Date().toLocaleDateString().replace('/','-');
-              core.setOutput('DATE',date);
+              const date = new Date().toLocaleDateString().replace('/','.');
+              core.debug(date);
+              core.setOutput('VERSION',date);
             }catch(e){
               core.setFailed(e.message);
             }
