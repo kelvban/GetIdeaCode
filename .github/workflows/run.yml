@@ -32,7 +32,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: $NOW
+          tag_name: env.NOW
           release_name: Release "code.txt"
           prerelease: false
       - name: Echo current date
