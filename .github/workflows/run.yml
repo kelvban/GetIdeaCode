@@ -3,6 +3,7 @@ name: 自动获取idea激活码
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
   #  schedule:
   #    - cron: '0 1 * * *'
 #  watch:
