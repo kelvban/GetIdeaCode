@@ -37,6 +37,7 @@ jobs:
                 repo: 'GetIdeaCode',
                 tag: 'latest'
               })
+            console.log(releaseResponse);
               const {
                 data: { id: releaseId, html_url: htmlUrl, upload_url: uploadUrl }
               } = releaseResponse;
