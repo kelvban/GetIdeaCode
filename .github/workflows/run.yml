@@ -46,7 +46,7 @@ jobs:
               core.setOutput('upload_url', uploadUrl);
             } catch (e) {
               core.debug("sssss");
-              core.setFailed(e.message);
+              core.setFailed("sssssss");
             }
       - name: Upload code.txt
         uses: actions/upload-release-asset@v1.0.2
