@@ -2,10 +2,10 @@ name: 自动获取idea激活码
 
 on:
   push:
-#    branches: [ main ]
-    # Sequence of patterns matched against refs/tags
-#    tags:
-#      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+  #    branches: [ main ]
+  # Sequence of patterns matched against refs/tags
+  #    tags:
+  #      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
   workflow_dispatch:
   schedule:
     - cron: '0 16 * * *'
@@ -13,31 +13,37 @@ on:
 #    types: started
 
 jobs:
-#  get_date:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Set current date as env variable
-#        run: echo "NOW=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-#      - name: test date
-#        run: echo $NOW
-  create_release:
-    #needs: check_version
+  get_date:
     runs-on: ubuntu-latest
     steps:
-      - name: Set current date as env variable
-        run: echo "NOW=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: get current date
+        id: getDate
+        uses: actions/github-script@v3.1.0
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            try {
+              const date = new Date().toLocaleDateString().replace('/','-');
+              core.setOutput('date',DATE);
+            }catch(e){
+              core.setFailed(e.message);
+            }
+
+  create_release:
+    needs: get_date
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/create-release@master
         id: createRelease
         name: Create Runner Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: env.NOW
-          release_name: Release "code.txt"
+          tag_name: "${{ needs.get_date.outputs.DATE }}"
+          release_name: "code.txt"
           prerelease: false
-      - name: Echo current date
-        run: echo $NOW
   build:
+    needs: [ get_date, create_release ]
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
 
@@ -59,11 +65,10 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             try {
-              const date = new Date().toLocaleDateString().replaceAll('/','-');
               const releaseResponse = await github.repos.getReleaseByTag({
                 owner: 'natpacket',
                 repo: 'GetIdeaCode',
-                tag: date
+                tag: '${{ needs.get_date.outputs.DATE }}'
               })
               const {
                 data: { id: releaseId, html_url: htmlUrl, upload_url: uploadUrl }
