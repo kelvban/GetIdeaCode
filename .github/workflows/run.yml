@@ -34,9 +34,10 @@ jobs:
             try {
               const releaseResponse = await github.repos.getReleaseByTag({
                 owner: 'natpacket',
-                repo: 'GetIdeaCode'
+                repo: 'GetIdeaCode',
+                tag: 'latest'
               })
-              core.setFailed(releaseResponse);
+              core.debug("sssss");
               const {
                 data: { id: releaseId, html_url: htmlUrl, upload_url: uploadUrl }
               } = releaseResponse;
@@ -44,6 +45,7 @@ jobs:
               core.setOutput('html_url', htmlUrl);
               core.setOutput('upload_url', uploadUrl);
             } catch (e) {
+              core.debug("sssss");
               core.setFailed(e.message);
             }
       - name: Upload code.txt
