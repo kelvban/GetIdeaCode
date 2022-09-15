@@ -1,0 +1,62 @@
+name: 自动获取idea激活码
+
+on:
+  push:
+    branches: [ main ]
+  #  schedule:
+  #    - cron: '0 1 * * *'
+#  watch:
+#    types: started
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: 初始化Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: 更新激活码
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python3 get_jihuoma.py
+      - name: Check release version
+        id: checkReleaseVersion
+        uses: actions/github-script@v3.1.0
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            try {
+              const releaseResponse = await github.repos.getReleaseByTag({
+                owner: 'natpacket',
+                repo: 'GetIdeaCode',
+                tag: 'lastest'
+              })
+              const {
+                data: { id: releaseId, html_url: htmlUrl, upload_url: uploadUrl }
+              } = releaseResponse;
+              core.setOutput('id', releaseId);
+              core.setOutput('html_url', htmlUrl);
+              core.setOutput('upload_url', uploadUrl);
+            } catch (e) {
+              core.setFailed(e.message);
+            }
+      - name: Upload code.txt
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: '${{ steps.checkReleaseVersion.outputs.upload_url }}'
+          asset_path: '${{ github.workspace }}/code.txt'
+          asset_name: 'code.txt'
+          asset_content_type: application/octet-stream
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@main
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 1
