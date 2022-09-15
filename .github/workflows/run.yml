@@ -34,8 +34,7 @@ jobs:
             try {
               const releaseResponse = await github.repos.getReleaseByTag({
                 owner: 'natpacket',
-                repo: 'GetIdeaCode',
-#                tag: 'latest'
+                repo: 'GetIdeaCode'
               })
               core.setFailed(releaseResponse);
               const {
