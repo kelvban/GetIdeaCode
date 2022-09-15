@@ -13,26 +13,28 @@ on:
 #    types: started
 
 jobs:
-  get_date:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set current date as env variable
-        run: echo "NOW=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-      - name: test date
-        run: echo $NOW
+#  get_date:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Set current date as env variable
+#        run: echo "NOW=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+#      - name: test date
+#        run: echo $NOW
   create_release:
     #needs: check_version
     runs-on: ubuntu-latest
     steps:
-#      - uses: actions/create-release@master
-#        id: createRelease
-#        name: Create Runner Release
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          tag_name: 'latest'
-#          release_name: Release "code.txt"
-#          prerelease: false
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - uses: actions/create-release@master
+        id: createRelease
+        name: Create Runner Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: $NOW
+          release_name: Release "code.txt"
+          prerelease: false
       - name: Echo current date
         run: echo $NOW
   build:
@@ -57,10 +59,11 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             try {
+              const date = new Date().toLocaleDateString().replaceAll('/','-');
               const releaseResponse = await github.repos.getReleaseByTag({
                 owner: 'natpacket',
                 repo: 'GetIdeaCode',
-                tag: 'latest'
+                tag: date
               })
               const {
                 data: { id: releaseId, html_url: htmlUrl, upload_url: uploadUrl }
