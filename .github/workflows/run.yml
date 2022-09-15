@@ -23,7 +23,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             try {
-              const date = new Date().toLocaleDateString().replace(/\//g,'-');
+              const date = new Date().toLocaleDateString().replace(/\//g,'.');
               core.info(date);
               core.setOutput('DATE',date);
             }catch(e){
