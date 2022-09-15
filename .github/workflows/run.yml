@@ -24,7 +24,7 @@ jobs:
           script: |
             try {
               const date = new Date().toLocaleDateString().replace('/','.');
-              core.debug(date);
+              core.info(date);
               core.setOutput('VERSION',date);
             }catch(e){
               core.setFailed(e.message);
