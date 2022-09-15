@@ -20,8 +20,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: "latest"
-          release_name: "code.txt"
+          tag_name: ${{ github.ref }}
+          release_name: Release "code.txt"
           prerelease: false
   build:
     runs-on: ubuntu-latest
