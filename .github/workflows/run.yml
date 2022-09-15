@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set current date as env variable
-        run: echo "NOW::$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        run: echo "NOW=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
   create_release:
     #needs: check_version
     runs-on: ubuntu-latest
