@@ -13,19 +13,26 @@ on:
 #    types: started
 
 jobs:
-#  create_release:
-#    #needs: check_version
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/create-release@master
-#        id: createRelease
-#        name: Create Runner Release
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          tag_name: 'latest'
-#          release_name: Release "code.txt"
-#          prerelease: false
+  get_date:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set current date as env variable
+        run: echo "NOW::$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+  create_release:
+    #needs: check_version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-release@master
+        id: createRelease
+        name: Create Runner Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: 'latest'
+          release_name: Release "code.txt"
+          prerelease: false
+      - name: Echo current date
+        run: echo $NOW
   build:
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
