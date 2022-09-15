@@ -35,7 +35,7 @@ jobs:
               const releaseResponse = await github.repos.getReleaseByTag({
                 owner: 'natpacket',
                 repo: 'GetIdeaCode',
-                tag: 'lastest'
+                tag: 'latest'
               })
               const {
                 data: { id: releaseId, html_url: htmlUrl, upload_url: uploadUrl }
