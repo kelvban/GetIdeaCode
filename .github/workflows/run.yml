@@ -15,6 +15,8 @@ on:
 jobs:
   get_date:
     runs-on: ubuntu-latest
+    outputs:
+      TAG: ${{ steps.getDate.outputs.DATE}}
     steps:
       - name: get current date
         id: getDate
@@ -40,7 +42,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: "${{ needs.get_date.outputs.DATE }}"
+          tag_name: "${{ needs.get_date.outputs.TAG}}"
           release_name: "code.txt"
           prerelease: false
   build:
@@ -69,7 +71,7 @@ jobs:
               const releaseResponse = await github.repos.getReleaseByTag({
                 owner: 'natpacket',
                 repo: 'GetIdeaCode',
-                tag: '${{ needs.get_date.outputs.DATE }}'
+                tag: '${{ needs.get_date.outputs.TAG}}'
               })
               const {
                 data: { id: releaseId, html_url: htmlUrl, upload_url: uploadUrl }
