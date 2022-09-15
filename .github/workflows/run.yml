@@ -1,8 +1,8 @@
 name: 自动获取idea激活码
 
 on:
-  push:
-  #    branches: [ main ]
+#  push:
+#      branches: [ main ]
   # Sequence of patterns matched against refs/tags
   #    tags:
   #      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
